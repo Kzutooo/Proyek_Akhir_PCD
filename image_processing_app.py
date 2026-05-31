@@ -195,24 +195,38 @@ class ImageProcessingApp(tk.Tk):
         main.pack(fill='both', expand=True, padx=16, pady=(0, 16))
 
         # Left panel – controls (scrollable)
-        left_outer = ttk.Frame(main, style='Panel.TFrame', width=270)
+        # Dilebarkan sedikit menjadi 280 agar scrollbar tidak menutupi ujung elemen
+        left_outer = ttk.Frame(main, style='Panel.TFrame', width=280)
         left_outer.pack(side='left', fill='y', padx=(0, 12))
         left_outer.pack_propagate(False)
 
-        _cv = tk.Canvas(left_outer, bg="#1a1d27", highlightthickness=0, width=268)
+        _cv = tk.Canvas(left_outer, bg="#1a1d27", highlightthickness=0)
         _sb = ttk.Scrollbar(left_outer, orient='vertical', command=_cv.yview)
         left = ttk.Frame(_cv, style='Panel.TFrame')
-        left.bind("<Configure>",
-                lambda e: _cv.configure(scrollregion=_cv.bbox("all")))
-        _cv.create_window((0, 0), window=left, anchor='nw')
+        
+        # Simpan ID window untuk kontrol ukuran dinamis
+        frame_id = _cv.create_window((0, 0), window=left, anchor='nw')
+
+        # Update scrollregion saat tinggi konten bertambah
+        left.bind("<Configure>", lambda e: _cv.configure(scrollregion=_cv.bbox("all")))
+        
+        # Paksa frame internal mengikuti lebar canvas agar elemen tidak bertumpuk
+        _cv.bind("<Configure>", lambda e: _cv.itemconfig(frame_id, width=e.width))
+
         _cv.configure(yscrollcommand=_sb.set)
         _sb.pack(side='right', fill='y')
         _cv.pack(side='left', fill='both', expand=True)
+        
         # Scroll dengan mouse wheel
         def _on_mousewheel(e):
             _cv.yview_scroll(int(-1*(e.delta/120)), "units")
         _cv.bind_all("<MouseWheel>", _on_mousewheel)
+        
         self._build_left_panel(left)
+
+        # Paksa kalkulasi layout sebelum menentukan area scroll akhir
+        self.update_idletasks()
+        _cv.configure(scrollregion=_cv.bbox("all"))
 
         # Right – image display + tabs
         right = ttk.Frame(main)
@@ -263,7 +277,7 @@ class ImageProcessingApp(tk.Tk):
                     command=lambda o=op: self.arith_op(o)).pack(
                         side='left', expand=True, fill='x', padx=2)
 
-        ttk.Label(parent, text="  Nilai skalar (jika tanpa gambar ke-2):",
+        ttk.Label(parent, text="  Nilai skalar :",
                 background="#1a1d27", foreground="#aab0c0",
                 font=('Times New Roman', 8)).pack(anchor='w', padx=12)
         self.scalar_var = tk.IntVar(value=50)
@@ -316,8 +330,11 @@ class ImageProcessingApp(tk.Tk):
         ttk.Button(parent, text="[S] Simpan Hasil",
                 style='Accent.TButton',
                    command=self.save_result).pack(fill='x', **pad)
+        
+        # Beri padding bawah ekstra (24px) pada elemen terakhir 
+        # agar tidak terpotong oleh batas bawah area scroll.
         ttk.Button(parent, text="[R] Reset",
-                   command=self.reset).pack(fill='x', **pad)
+                   command=self.reset).pack(fill='x', padx=12, pady=(4, 24))
 
     # ── Right Panel ──
     def _build_right_panel(self, parent):
