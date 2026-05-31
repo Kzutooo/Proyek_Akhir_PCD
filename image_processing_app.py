@@ -111,24 +111,18 @@ def morph_erosi(binary: np.ndarray, se: np.ndarray) -> np.ndarray:
 # ─────────────────────────────────────────────
 
 SE_LIBRARY = {
-    "Persegi 3×3 (Square)": np.ones((3, 3), dtype=np.uint8),
-    "Cross / Plus 3×3": np.array([[0,1,0],[1,1,1],[0,1,0]], dtype=np.uint8),
-    "Diamond 5×5": np.array([
-        [0,0,1,0,0],
-        [0,1,1,1,0],
-        [1,1,1,1,1],
-        [0,1,1,1,0],
-        [0,0,1,0,0]], dtype=np.uint8),
-    "Horizontal Line 1×5": np.array([[1,1,1,1,1]], dtype=np.uint8),
-    "Vertical Line 5×1": np.array([[1],[1],[1],[1],[1]], dtype=np.uint8),
-    "Disk 5×5 (approx.)": np.array([
-        [0,1,1,1,0],
-        [1,1,1,1,1],
-        [1,1,1,1,1],
-        [1,1,1,1,1],
-        [0,1,1,1,0]], dtype=np.uint8),
+    "Persegi 3×3 (Square)": np.array([
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+    ], dtype=np.uint8),
+    
+    "Cross / Plus 3×3": np.array([
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 1, 0]
+    ], dtype=np.uint8)
 }
-
 
 # ─────────────────────────────────────────────
 # APLIKASI UTAMA
