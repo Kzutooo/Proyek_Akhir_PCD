@@ -266,10 +266,28 @@ class ImageProcessingApp(tk.Tk):
 
         ops_frame = ttk.Frame(parent, style='Panel.TFrame')
         ops_frame.pack(fill='x', **pad)
-        for op in ["Tambah", "Kurang", "Kali", "Bagi"]:
-            ttk.Button(ops_frame, text=op,
-                    command=lambda o=op: self.arith_op(o)).pack(
-                        side='left', expand=True, fill='x', padx=2)
+        
+        # Baris 1: Tambah dan Kurang
+        row1_frame = ttk.Frame(ops_frame, style='Panel.TFrame')
+        row1_frame.pack(fill='x', pady=2)
+        
+        ttk.Button(row1_frame, text="Tambah",
+                command=lambda: self.arith_op("Tambah")).pack(
+                    side='left', expand=True, fill='x', padx=2)
+        ttk.Button(row1_frame, text="Kurang",
+                command=lambda: self.arith_op("Kurang")).pack(
+                    side='left', expand=True, fill='x', padx=2)
+
+        # Baris 2: Kali dan Bagi
+        row2_frame = ttk.Frame(ops_frame, style='Panel.TFrame')
+        row2_frame.pack(fill='x', pady=2)
+        
+        ttk.Button(row2_frame, text="Kali",
+                command=lambda: self.arith_op("Kali")).pack(
+                    side='left', expand=True, fill='x', padx=2)
+        ttk.Button(row2_frame, text="Bagi",
+                command=lambda: self.arith_op("Bagi")).pack(
+                    side='left', expand=True, fill='x', padx=2)
 
         ttk.Label(parent, text="  Nilai skalar :",
                 background="#1a1d27", foreground="#aab0c0",
